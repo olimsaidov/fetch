@@ -28,6 +28,7 @@
    :json         "application/json"
    :form-encoded "application/x-www-form-urlencoded"
    :text         "text/plain"
+   :form-data    "multipart/form-data"
    :html         "text/html"})
 
 (defn query-encode [s]
@@ -67,6 +68,12 @@
 
 (defmethod encode-body :json [_ body opts]
   (js/JSON.stringify (clj->js body)))
+
+(defmethod encode-body :form-data [_ body opts]
+  (let [form-data (js/FormData.)]
+    (doseq [[k v] body]
+      (.append form-data k v))
+    form-data))
 
 (defmulti decode-body (fn [content-type bodyp opts] content-type))
 
