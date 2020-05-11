@@ -72,7 +72,7 @@
 (defmethod encode-body :form-data [_ body opts]
   (let [form-data (js/FormData.)]
     (doseq [[k v] body]
-      (.append form-data k v))
+      (.append form-data (name k) v))
     form-data))
 
 (defmulti decode-body (fn [content-type bodyp opts] content-type))
